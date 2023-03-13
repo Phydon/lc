@@ -57,12 +57,6 @@ fn main() {
     let matches = leann_core().get_matches();
 
     match matches.subcommand() {
-        Some(("run", _)) => {
-            if let Err(err) = get_lc() {
-                error!("Unable to get leann-core utils: {err}");
-                process::exit(1);
-            }
-        }
         Some(("log", _)) => {
             if let Ok(logs) = show_log_file(&config_dir) {
                 println!("{}", "Available logs:".bold().yellow());
@@ -73,7 +67,10 @@ fn main() {
             }
         }
         _ => {
-            unreachable!();
+            if let Err(err) = get_lc() {
+                error!("Unable to get leann-core utils: {err}");
+                process::exit(1);
+            }
         }
     }
 }
@@ -97,12 +94,6 @@ fn leann_core() -> Command {
         .version("1.0.0")
         .author("Leann Phydon <leann.phydon@gmail.com>")
         .subcommand(
-            Command::new("run")
-                .short_flag('r')
-                .long_flag("run")
-                .about("Get leann-core utils"),
-        )
-        .subcommand(
             Command::new("log")
                 .short_flag('L')
                 .long_flag("log")
@@ -112,6 +103,7 @@ fn leann_core() -> Command {
 
 fn get_lc() -> io::Result<()> {
     let packages = vec!["wasd".to_string(), "test".to_string(), "stuff".to_string()];
+
     if let Err(err) = download(packages) {
         error!("Unable to get packages: {err}");
     }
@@ -123,15 +115,16 @@ fn get_lc() -> io::Result<()> {
 
 fn download(packages: Vec<String>) -> Result<Arc<MultiProgress>, Box<dyn Error>> {
     let started = Instant::now();
-    let spinner_style = ProgressStyle::with_template("{prefix} {spinner:.red} {wide_msg}").unwrap();
+    let spinner_style =
+        ProgressStyle::with_template("{prefix} {spinner:.blue} {wide_msg}").unwrap();
 
     let m = Arc::new(MultiProgress::new());
     let sty = ProgressStyle::with_template(
-        "{spinner:.red} [{elapsed_precise}] {bar:40.red/white} {pos:>5}/{len:5} {eta:5} {msg}",
+        "{spinner:.red} [{elapsed_precise}] {bar:40.blue/white} {pos:>5}/{len:5} {eta:5} {msg}",
     )
     .unwrap()
-    // .progress_chars("#>-");
-    .progress_chars("=>-");
+    .progress_chars("->..");
+    // .progress_chars("=>-");
 
     let pb = m.add(ProgressBar::new(packages.len() as u64));
     pb.set_style(sty);
@@ -182,6 +175,9 @@ fn download(packages: Vec<String>) -> Result<Arc<MultiProgress>, Box<dyn Error>>
 
 fn get_pkg(name: String) -> Result<(), Box<dyn Error>> {
     thread::sleep(Duration::from_millis(3000));
+
+    // Invoke-WebRequest -Uri <source> -OutFile <destination>
+    // curl.exe -LO https://github.com/Phydon/<REPO>/releases/latest/download/<FILE>
 
     // let cmd = String::from("update ");
     // cmd.push_str(&name);
