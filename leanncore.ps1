@@ -1,18 +1,10 @@
+$destination_path = "~/.local/bin"
+
 # get repo-owner from user (don't show on screen)
 $input = Read-Host "Enter owner: " -AsSecureString
 $owner = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
 	[Runtime.InteropServices.Marshal]::SecureStringToBSTR($input)
 )
-
-# TODO compare input (hash) with (hash of) "Phydon"
-# If(!($input -eq "Phydon")) {
-	# Write-Host "Owner unknown"
-	# exit
-# }
-
-# $destination_path = "~/.local/bin"
-# TODO remove after testing
-$destination_path = "~/main/lc/testdir"
 
 Write-Host "Downloading leanncore-utils into $destination_path..."
 
@@ -24,7 +16,15 @@ If(!(test-path -PathType container $destination_path)) {
 $utils = @("sf", "mg", "pf", "cx", "sl", "up", "witchfile", "map", "gib")
 
 try {
+	$counter = 0
 	foreach ($util in $utils) {
+		$progress = [math]::round(($counter/$utils.count) * 100, 2)
+		
+		Write-Progress -Activity "Downloading" -Status "$progress% Complete:" -CurrentOperation "$util.exe" -PercentComplete $progress
+		
+		# supress the progress bar
+		$ProgressPreference = "SilentlyContinue"
+	
 		# get latest release version for each leanncore util
 		$latestRelease = Invoke-WebRequest "https://github.com/$owner/$util/releases/latest" -Headers @{"Accept"="application/json"} -ErrorAction Stop
 		$json = $latestRelease.Content | ConvertFrom-Json
@@ -34,10 +34,19 @@ try {
 		$outfile = "$destination_path/$util.exe"
 
 		Invoke-WebRequest -Uri $url -Outfile $outfile -ErrorAction Stop
+
+		# restore the progress bar
+		$ProgressPreference = "Continue"
+		
+		$counter++
 	}
 
 	Write-Host "All done"
 }
 catch {
 	Write-Warning $Error[0]
+}
+finally {
+	# restore the progress bar
+	$ProgressPreference = "Continue"
 }
