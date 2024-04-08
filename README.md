@@ -13,6 +13,8 @@
 - ![sl](https://github.com/Phydon/sl)
 - ![up](https://github.com/Phydon/up)
 - ![witchfile](https://github.com/Phydon/witchfile)
+- ![ms](https://github.com/Phydon/ms)
+- ![xa](https://github.com/Phydon/xa)
 
 Local download location: 
 > ~/.local/bin/

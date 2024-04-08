@@ -13,7 +13,7 @@ If(!(test-path -PathType container $destination_path)) {
 	[void](New-Item -ItemType Directory -Path $destination_path)
 }
 
-$utils = @("sf", "mg", "pf", "cx", "sl", "up", "witchfile", "map", "gib", "ms")
+$utils = @("sf", "mg", "pf", "cx", "sl", "up", "witchfile", "map", "gib", "ms", "xa")
 
 try {
 	$counter = 0
