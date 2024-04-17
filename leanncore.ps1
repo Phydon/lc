@@ -6,7 +6,7 @@ $owner = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
 	[Runtime.InteropServices.Marshal]::SecureStringToBSTR($input)
 )
 
-Write-Host "Downloading leanncore-utils into $destination_path..."
+Write-Host "Downloading leanncore-utils into $destination_path"
 
 # create output directory if it doesn't exist
 If (!(test-path -PathType container $destination_path)) {
@@ -34,19 +34,18 @@ try {
 		$outfile = "$destination_path/$util.exe"
 		
 		# get current version for each leanncore util
-		$version = (Invoke-Expression "$outfile -V").split(" ")[-1]
-		# TODO do this in one line
-		$versionV = "V$version"
+		$currentVersion = "V$((Invoke-Expression "$outfile -V").split(" ")[-1])"
 
 		# compare current version with latest release version
-		If (($versionV -eq $latestVersion)) {
-			Write-Host "$util $versionV already up to date"
-		} Else {
-			Write-Host "Updating $util $versionV => $latestVersion"
-
-			# FIXME doesn`t update an existing file
-			# FIXME e.g.: mg V1.2.5 doesn't get updated to V1.2.6 if mg.exe already exists in destination_path
+		# only download util when currentVersion != latestVersion
+		# TODO make semantic version check
+		# TODO update when currentVersion < latestVersion
+		If (!($currentVersion -eq $latestVersion)) {
+			Write-Host "Updating $util $currentVersion => $latestVersion"
 			Invoke-WebRequest -Uri $url -Outfile $outfile -ErrorAction Stop 
+		# } Else {
+		# 	# TODO remove else statement??
+		# 	Write-Host "$util $currentVersion already up to date"
 		}
 		
 		# restore the progress bar
