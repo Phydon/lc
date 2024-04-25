@@ -1,4 +1,5 @@
-$destination_path = "~/.local/bin"
+# $destination_path = "~/.local/bin"
+$destination_path = "~/.local/bin/test"
 
 # get repo-owner from user (don't show on screen)
 $input = Read-Host "Enter owner: " -AsSecureString
@@ -33,20 +34,27 @@ try {
 
 		$outfile = "$destination_path/$util.exe"
 		
-		# get current version for each leanncore util
-		$currentVersion = "V$((Invoke-Expression "$outfile -V").split(" ")[-1])"
-
-		# compare current version with latest release version
-		# only download util when currentVersion != latestVersion
-		# TODO make semantic version check
-		# TODO update when currentVersion < latestVersion
-		If (!($currentVersion -eq $latestVersion)) {
-			Write-Host "Updating $util $currentVersion => $latestVersion"
+		If (Test-Path $outfile) {
+			# get current version for each leanncore util if it already exists in destination_path
+			$currentVersion = "V$((Invoke-Expression "$outfile -V").split(" ")[-1])"
+			
+			# compare current version with latest release version
+			# only download util when currentVersion != latestVersion
+			# TODO make semantic version check
+			# TODO update when currentVersion < latestVersion
+			If (!($currentVersion -eq $latestVersion)) {
+				Write-Host "Updating $util $currentVersion => $latestVersion"
+				Invoke-WebRequest -Uri $url -Outfile $outfile -ErrorAction Stop 
+			# } Else {
+			# 	# TODO remove else statement??
+			# 	Write-Host "$util $currentVersion already up to date"
+			}
+		} Else {
+			# if util doesn't already exist in destination_path
+			Write-Host "Downloading $util $latestVersion"
 			Invoke-WebRequest -Uri $url -Outfile $outfile -ErrorAction Stop 
-		# } Else {
-		# 	# TODO remove else statement??
-		# 	Write-Host "$util $currentVersion already up to date"
 		}
+
 		
 		# restore the progress bar
 		$ProgressPreference = "Continue"
