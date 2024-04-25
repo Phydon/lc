@@ -1,5 +1,4 @@
-# $destination_path = "~/.local/bin"
-$destination_path = "~/.local/bin/test"
+$destination_path = "~/.local/bin"
 
 # get repo-owner from user (don't show on screen)
 $input = Read-Host "Enter owner: " -AsSecureString
