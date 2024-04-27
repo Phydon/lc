@@ -15,6 +15,7 @@
 - ![witchfile](https://github.com/Phydon/witchfile)
 - ![ms](https://github.com/Phydon/ms)
 - ![xa](https://github.com/Phydon/xa)
+- ![gerf](https://github.com/Phydon/gerf)
 
 Local download location: 
 > ~/.local/bin/
