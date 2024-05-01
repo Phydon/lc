@@ -3,7 +3,7 @@ param(
 )
 
 # Define the version
-$scriptVersion = "lc 1.0.0"
+$scriptVersion = "lc 1.0.1"
 
 # Check if version argument was passed
 if ($V) {
@@ -25,7 +25,7 @@ if ($V) {
 		[Runtime.InteropServices.Marshal]::SecureStringToBSTR($input)
 	)
 
-	$utils = @("sf", "mg", "pf", "cx", "sl", "up", "witchfile", "map", "gib", "ms", "xa", "gerf")
+	$utils = @("sf", "mg", "pf", "cx", "sl", "up", "witchfile", "map", "gib", "ms", "xa", "gerf", "sp")
 
 	try {
 		Write-Host "Downloading leanncore-utils into $destination_path"
