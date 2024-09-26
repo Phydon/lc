@@ -1,15 +1,27 @@
 param(
-  [switch]$V
+  [switch]$V,
+  [switch]$l
 )
 
 # Define the version
-$scriptVersion = "lc 1.0.1"
+$scriptVersion = "lc 1.0.2"
+
+# all leanncore utils
+$utils = @("sf", "mg", "pf", "cx", "sl", "up", "witchfile", "map", "gib", "ms", "xa", "gerf", "sp") | Sort-Object
+
 
 # Check if version argument was passed
 if ($V) {
 
   # Show the version
   Write-Host "$scriptVersion"
+
+} elseif ($l) {
+	
+	# list all available leanncore utils
+	foreach ($util in $utils) {
+		Write-Host $util
+	}
 
 } else {
 	$destination_path = "~/.local/bin"
@@ -24,8 +36,6 @@ if ($V) {
 	$owner = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
 		[Runtime.InteropServices.Marshal]::SecureStringToBSTR($input)
 	)
-
-	$utils = @("sf", "mg", "pf", "cx", "sl", "up", "witchfile", "map", "gib", "ms", "xa", "gerf", "sp")
 
 	try {
 		Write-Host "Downloading leanncore-utils into $destination_path"
