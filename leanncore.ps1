@@ -4,10 +4,10 @@ param(
 )
 
 # Define the version
-$scriptVersion = "lc 1.0.2"
+$scriptVersion = "lc 1.0.3"
 
 # all leanncore utils
-$utils = @("sf", "mg", "pf", "cx", "sl", "up", "witchfile", "map", "gib", "ms", "xa", "gerf", "sp") | Sort-Object
+$utils = @("sf", "mg", "pf", "cx", "sl", "up", "witchfile", "map", "gib", "ms", "xa", "gerf", "sp", "sg") | Sort-Object
 
 
 # Check if version argument was passed
